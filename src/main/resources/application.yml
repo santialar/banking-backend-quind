@@ -4,7 +4,7 @@ spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/financial_db
     username: postgres
-    password: postgres
+    password: santiago
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
