@@ -1,7 +1,8 @@
 package com.prueba.bankingbackendquind.infrastructure.adapter.out.persistence.entity;
 
-import com.quind.financialapp.domain.model.EstadoCuenta;
-import com.quind.financialapp.domain.model.TipoCuenta;
+
+import com.prueba.bankingbackendquind.domain.model.enums.EstadoCuenta;
+import com.prueba.bankingbackendquind.domain.model.enums.TipoCuenta;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
@@ -59,10 +60,9 @@ public class ProductoEntity {
         fechaModificacion = LocalDateTime.now();
     }
 
-    // Constructors
-    public ProductoEntity() {}
+    public ProductoEntity() {
+    }
 
-    // Getters y Setters
     public Long getId() {
         return id;
     }

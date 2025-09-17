@@ -1,5 +1,7 @@
 package com.prueba.bankingbackendquind.domain.model;
 
+import com.prueba.bankingbackendquind.domain.model.enums.TipoTransaccion;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
@@ -14,7 +16,8 @@ public class Transaccion {
     private String numeroCuentaOrigen;
     private String numeroCuentaDestino;
 
-    public Transaccion() {}
+    public Transaccion() {
+    }
 
     public Transaccion(TipoTransaccion tipoTransaccion, BigDecimal monto, String descripcion,
                        Long cuentaOrigenId, String numeroCuentaOrigen) {
@@ -51,7 +54,6 @@ public class Transaccion {
         return tipoTransaccion == TipoTransaccion.RETIRO;
     }
 
-    // Getters y Setters
     public Long getId() {
         return id;
     }

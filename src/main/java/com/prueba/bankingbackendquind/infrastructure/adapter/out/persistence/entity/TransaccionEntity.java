@@ -1,6 +1,6 @@
 package com.prueba.bankingbackendquind.infrastructure.adapter.out.persistence.entity;
 
-import com.quind.financialapp.domain.model.TipoTransaccion;
+import com.prueba.bankingbackendquind.domain.model.enums.TipoTransaccion;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
@@ -45,10 +45,9 @@ public class TransaccionEntity {
         fechaCreacion = LocalDateTime.now();
     }
 
-    // Constructors
-    public TransaccionEntity() {}
+    public TransaccionEntity() {
+    }
 
-    // Getters y Setters
     public Long getId() {
         return id;
     }

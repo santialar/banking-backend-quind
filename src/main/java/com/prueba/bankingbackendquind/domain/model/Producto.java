@@ -1,5 +1,8 @@
 package com.prueba.bankingbackendquind.domain.model;
 
+import com.prueba.bankingbackendquind.domain.model.enums.EstadoCuenta;
+import com.prueba.bankingbackendquind.domain.model.enums.TipoCuenta;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;

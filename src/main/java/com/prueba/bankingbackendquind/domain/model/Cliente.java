@@ -1,5 +1,7 @@
 package com.prueba.bankingbackendquind.domain.model;
 
+import com.prueba.bankingbackendquind.domain.model.enums.TipoIdentificacion;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -16,7 +18,8 @@ public class Cliente {
     private LocalDateTime fechaModificacion;
     private List<Producto> productos;
 
-    public Cliente() {}
+    public Cliente() {
+    }
 
     public Cliente(TipoIdentificacion tipoIdentificacion, String numeroIdentificacion,
                    String nombres, String apellido, String correoElectronico,
@@ -43,7 +46,6 @@ public class Cliente {
         this.fechaModificacion = LocalDateTime.now();
     }
 
-    // Getters y Setters
     public Long getId() {
         return id;
     }
