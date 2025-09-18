@@ -2,9 +2,9 @@ spring:
   application:
     name: banking-Backend-Quind
   datasource:
-    url: jdbc:postgresql://localhost:5432/financial_db
+    url: jdbc:postgresql://localhost:55432/financial_db
     username: postgres
-    password: santiago
+    password: postgres
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
