@@ -24,7 +24,7 @@ server:
 
 logging:
   level:
-    com.quind: DEBUG
+    com.prueba: DEBUG
     org.springframework.web: DEBUG
     org.hibernate.SQL: DEBUG
 

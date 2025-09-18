@@ -108,7 +108,6 @@ public class GlobalExceptionHandler {
             this.timestamp = timestamp;
         }
 
-        // Getters y Setters
         public String getCode() {
             return code;
         }
