@@ -99,7 +99,18 @@ cd banking/Backend-Quind
 docker-compose up -d postgres
 ```
 
-3. **Ejecutar la aplicación**
+3. **ingresas a la interfaz de pgadmin**
+   ```bash
+    [docker-compose up -d postgres](http://localhost:5050/browser/)
+   ```
+4. **Credenciales**
+   una vez estes en la interfaz colocas las credenciales
+    ```bash
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+   ```
+
+5. **Ejecutar la aplicación**
 ```bash
 mvn spring-boot:run
 ```
