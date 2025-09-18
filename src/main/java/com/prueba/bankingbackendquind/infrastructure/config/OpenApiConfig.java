@@ -14,13 +14,13 @@ public class OpenApiConfig {
     public OpenAPI customOpenAPI() {
         return new OpenAPI()
                 .info(new Info()
-                        .title("Financial App API")
+                        .title("banking-backend-quind API")
                         .description("API para gestión de clientes, productos financieros y transacciones")
                         .version("1.0.0")
                         .contact(new Contact()
-                                .name("Equipo de Desarrollo")
-                                .email("dev@financialapp.com")
-                                .url("https://github.com/financialapp"))
+                                .name("Santiago Alarcon Vargas")
+                                .email("santiagoalarconvargas1@gmail.com")
+                                .url("https://github.com/santialar/banking-backend-quind"))
                         .license(new License()
                                 .name("MIT License")
                                 .url("https://opensource.org/licenses/MIT")));
