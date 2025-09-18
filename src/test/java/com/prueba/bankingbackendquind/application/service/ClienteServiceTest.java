@@ -105,6 +105,66 @@ class ClienteServiceTest {
     }
 
     @Test
+    void crearClienteDeberiaLanzarExcepcionSiApellidoMuyCorto() {
+        clienteValido.setApellido("A");
+
+        BusinessException ex = assertThrows(BusinessException.class,
+                () -> clienteService.crearCliente(clienteValido));
+
+        assertEquals("El apellido debe tener al menos 2 caracteres", ex.getMessage());
+    }
+
+    @Test
+    void crearClienteDeberiaLanzarExcepcionSiApellidoEsNull() {
+        clienteValido.setApellido(null);
+
+        BusinessException ex = assertThrows(BusinessException.class,
+                () -> clienteService.crearCliente(clienteValido));
+
+        assertEquals("El apellido debe tener al menos 2 caracteres", ex.getMessage());
+    }
+
+    @Test
+    void crearClienteDeberiaLanzarExcepcionSiNumeroIdentificacionEsObligatorio() {
+        clienteValido.setNumeroIdentificacion("  ");
+
+        BusinessException ex = assertThrows(BusinessException.class,
+                () -> clienteService.crearCliente(clienteValido));
+
+        assertEquals("El número de identificación es obligatorio", ex.getMessage());
+    }
+
+    @Test
+    void crearClienteDeberiaLanzarExcepcionSiNumeroIdentificacionEsNull() {
+        clienteValido.setNumeroIdentificacion(null);
+
+        BusinessException ex = assertThrows(BusinessException.class,
+                () -> clienteService.crearCliente(clienteValido));
+
+        assertEquals("El número de identificación es obligatorio", ex.getMessage());
+    }
+
+    @Test
+    void crearClienteDeberiaLanzarExcepcionSiTipoIdentificacionEsObligatorio() {
+        clienteValido.setTipoIdentificacion(null);
+
+        BusinessException ex = assertThrows(BusinessException.class,
+                () -> clienteService.crearCliente(clienteValido));
+
+        assertEquals("El tipo de identificación es obligatorio", ex.getMessage());
+    }
+
+    @Test
+    void crearClienteDeberiaLanzarExcepcionSiFechaNacimientoEsObligatoria() {
+        clienteValido.setFechaNacimiento(null);
+
+        BusinessException ex = assertThrows(BusinessException.class,
+                () -> clienteService.crearCliente(clienteValido));
+
+        assertEquals("La fecha de nacimiento es obligatoria", ex.getMessage());
+    }
+
+    @Test
     void obtenerClientePorIdDeberiaRetornarClienteExistente() {
         when(clienteRepository.findById(1L)).thenReturn(Optional.of(clienteValido));
 
@@ -140,6 +200,30 @@ class ClienteServiceTest {
     }
 
     @Test
+    void obtenerClientePorNumeroIdentificacionDeberiaRetornarCliente() {
+        when(clienteRepository.findByNumeroIdentificacion("12345678"))
+                .thenReturn(Optional.of(clienteValido));
+
+        Cliente r = clienteService.obtenerClientePorNumeroIdentificacion("12345678");
+
+        assertNotNull(r);
+        assertEquals("12345678", r.getNumeroIdentificacion());
+        verify(clienteRepository).findByNumeroIdentificacion("12345678");
+    }
+
+    @Test
+    void obtenerClientePorNumeroIdentificacionDeberiaLanzarExcepcionCuandoNoExiste() {
+        when(clienteRepository.findByNumeroIdentificacion("000"))
+                .thenReturn(Optional.empty());
+
+        ClienteNotFoundException ex = assertThrows(ClienteNotFoundException.class,
+                () -> clienteService.obtenerClientePorNumeroIdentificacion("000"));
+
+        assertEquals("Cliente no encontrado con número de identificación: 000", ex.getMessage());
+        verify(clienteRepository).findByNumeroIdentificacion("000");
+    }
+
+    @Test
     void actualizarClienteDeberiaActualizarClienteExitosamente() {
         Cliente clienteActualizado = new Cliente();
         clienteActualizado.setTipoIdentificacion(TipoIdentificacion.CEDULA_CIUDADANIA);
@@ -150,7 +234,6 @@ class ClienteServiceTest {
         clienteActualizado.setFechaNacimiento(LocalDate.of(1990, 5, 15));
 
         when(clienteRepository.findById(1L)).thenReturn(Optional.of(clienteValido));
-        when(clienteRepository.existsByNumeroIdentificacion(anyString())).thenReturn(false);
         when(clienteRepository.save(any(Cliente.class))).thenReturn(clienteActualizado);
 
         Cliente resultado = clienteService.actualizarCliente(1L, clienteActualizado);
@@ -158,6 +241,49 @@ class ClienteServiceTest {
         assertNotNull(resultado);
         assertEquals("Juan Carlos Actualizado", resultado.getNombres());
         verify(clienteRepository).save(any(Cliente.class));
+    }
+
+    @Test
+    void actualizarClienteDeberiaActualizarClienteCuandoCambiaNumeroYNoExisteDuplicado() {
+        Cliente clienteActualizado = new Cliente();
+        clienteActualizado.setTipoIdentificacion(TipoIdentificacion.CEDULA_CIUDADANIA);
+        clienteActualizado.setNumeroIdentificacion("99999999");
+        clienteActualizado.setNombres("Juan Carlos Actualizado");
+        clienteActualizado.setApellido("Pérez");
+        clienteActualizado.setCorreoElectronico("juan.nuevo@email.com");
+        clienteActualizado.setFechaNacimiento(LocalDate.of(1990, 5, 15));
+
+        when(clienteRepository.findById(1L)).thenReturn(Optional.of(clienteValido));
+        when(clienteRepository.existsByNumeroIdentificacion("99999999")).thenReturn(false);
+        when(clienteRepository.save(any(Cliente.class))).thenReturn(clienteActualizado);
+
+        Cliente resultado = clienteService.actualizarCliente(1L, clienteActualizado);
+
+        assertNotNull(resultado);
+        assertEquals("Juan Carlos Actualizado", resultado.getNombres());
+        verify(clienteRepository).existsByNumeroIdentificacion("99999999");
+        verify(clienteRepository).save(any(Cliente.class));
+    }
+
+    @Test
+    void actualizarClienteDeberiaLanzarExcepcionSiNuevoNumeroYaExiste() {
+        when(clienteRepository.findById(1L)).thenReturn(Optional.of(clienteValido));
+
+        Cliente actualizado = new Cliente();
+        actualizado.setTipoIdentificacion(TipoIdentificacion.CEDULA_CIUDADANIA);
+        actualizado.setNumeroIdentificacion("99999999");
+        actualizado.setNombres("Juan");
+        actualizado.setApellido("Pérez");
+        actualizado.setCorreoElectronico("juan@email.com");
+        actualizado.setFechaNacimiento(LocalDate.of(1990, 5, 15));
+
+        when(clienteRepository.existsByNumeroIdentificacion("99999999")).thenReturn(true);
+
+        BusinessException ex = assertThrows(BusinessException.class,
+                () -> clienteService.actualizarCliente(1L, actualizado));
+
+        assertTrue(ex.getMessage().contains("Ya existe un cliente con el número de identificación"));
+        verify(clienteRepository, never()).save(any(Cliente.class));
     }
 
     @Test
