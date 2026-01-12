@@ -8,12 +8,15 @@ spring:
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: none
     show-sql: true
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: true
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.xml
+    enabled: true
   jackson:
     serialization:
       write-dates-as-timestamps: false
@@ -27,6 +30,10 @@ logging:
     com.prueba: DEBUG
     org.springframework.web: DEBUG
     org.hibernate.SQL: DEBUG
+    liquibase: DEBUG
+    org.springframework.boot.autoconfigure.liquibase: DEBUG
+    liquibase.executor: DEBUG
+    liquibase.changelog: DEBUG
 
 springdoc:
   api-docs:

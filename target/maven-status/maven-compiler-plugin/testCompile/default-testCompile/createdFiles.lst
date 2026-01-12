@@ -1,0 +1,6 @@
+com\prueba\bankingbackendquind\application\service\TransaccionServiceTest.class
+com\prueba\bankingbackendquind\infrastructure\adapter\in\web\controller\TransaccionControllerTest.class
+com\prueba\bankingbackendquind\application\service\ProductoServiceTest.class
+com\prueba\bankingbackendquind\infrastructure\adapter\in\web\controller\ClienteControllerTest.class
+com\prueba\bankingbackendquind\infrastructure\adapter\in\web\controller\ProductoControllerTest.class
+com\prueba\bankingbackendquind\application\service\ClienteServiceTest.class

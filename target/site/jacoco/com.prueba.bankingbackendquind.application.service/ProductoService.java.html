@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ProductoService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">banking-Backend-Quind</a> &gt; <a href="index.source.html" class="el_package">com.prueba.bankingbackendquind.application.service</a> &gt; <span class="el_source">ProductoService.java</span></div><h1>ProductoService.java</h1><pre class="source lang-java linenums">package com.prueba.bankingbackendquind.application.service;
+
+
+import com.prueba.bankingbackendquind.domain.exception.BusinessException;
+import com.prueba.bankingbackendquind.domain.exception.ClienteNotFoundException;
+import com.prueba.bankingbackendquind.domain.exception.ProductoNotFoundException;
+import com.prueba.bankingbackendquind.domain.model.Producto;
+import com.prueba.bankingbackendquind.domain.model.enums.EstadoCuenta;
+import com.prueba.bankingbackendquind.domain.model.enums.TipoCuenta;
+import com.prueba.bankingbackendquind.domain.port.in.ProductoUseCase;
+import com.prueba.bankingbackendquind.domain.port.out.ClienteRepositoryPort;
+import com.prueba.bankingbackendquind.domain.port.out.ProductoRepositoryPort;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.math.BigDecimal;
+import java.util.List;
+
+@Service
+@Transactional
+public class ProductoService implements ProductoUseCase {
+
+    private final ProductoRepositoryPort productoRepository;
+    private final ClienteRepositoryPort clienteRepository;
+
+    public ProductoService(ProductoRepositoryPort productoRepository,
+<span class="fc" id="L27">                           ClienteRepositoryPort clienteRepository) {</span>
+<span class="fc" id="L28">        this.productoRepository = productoRepository;</span>
+<span class="fc" id="L29">        this.clienteRepository = clienteRepository;</span>
+<span class="fc" id="L30">    }</span>
+
+    @Override
+    public Producto crearProducto(TipoCuenta tipoCuenta, Long clienteId, boolean exentaGMF) {
+<span class="fc" id="L34">        clienteRepository.findById(clienteId)</span>
+<span class="fc" id="L35">                .orElseThrow(() -&gt; new ClienteNotFoundException(&quot;Cliente no encontrado con ID: &quot; + clienteId));</span>
+
+<span class="fc" id="L37">        Producto producto = new Producto(tipoCuenta, clienteId, exentaGMF);</span>
+
+<span class="fc bfc" id="L39" title="All 2 branches covered.">        while (productoRepository.existsByNumeroCuenta(producto.getNumeroCuenta())) {</span>
+<span class="fc" id="L40">            producto = new Producto(tipoCuenta, clienteId, exentaGMF);</span>
+        }
+
+<span class="fc" id="L43">        return productoRepository.save(producto);</span>
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Producto obtenerProductoPorId(Long id) {
+<span class="fc" id="L49">        return productoRepository.findById(id)</span>
+<span class="fc" id="L50">                .orElseThrow(() -&gt; new ProductoNotFoundException(&quot;Producto no encontrado con ID: &quot; + id));</span>
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Producto obtenerProductoPorNumeroCuenta(String numeroCuenta) {
+<span class="fc" id="L56">        return productoRepository.findByNumeroCuenta(numeroCuenta)</span>
+<span class="pc" id="L57">                .orElseThrow(() -&gt; new ProductoNotFoundException(&quot;Producto no encontrado con número de cuenta: &quot;</span>
+                        + numeroCuenta));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List&lt;Producto&gt; obtenerProductosPorCliente(Long clienteId) {
+<span class="fc" id="L64">        return productoRepository.findByClienteId(clienteId);</span>
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List&lt;Producto&gt; obtenerTodosLosProductos() {
+<span class="fc" id="L70">        return productoRepository.findAll();</span>
+    }
+
+    @Override
+    public Producto cambiarEstadoProducto(Long id, EstadoCuenta nuevoEstado) {
+<span class="fc" id="L75">        Producto producto = productoRepository.findById(id)</span>
+<span class="pc" id="L76">                .orElseThrow(() -&gt; new ProductoNotFoundException(&quot;Producto no encontrado con ID: &quot; + id));</span>
+
+<span class="fc bfc" id="L78" title="All 4 branches covered.">        if (nuevoEstado == EstadoCuenta.CANCELADA &amp;&amp; !producto.puedeSerCancelada()) {</span>
+<span class="fc" id="L79">            throw new BusinessException(&quot;No se puede cancelar una cuenta con saldo diferente a cero&quot;);</span>
+        }
+
+<span class="pc bpc" id="L82" title="1 of 4 branches missed.">        switch (nuevoEstado) {</span>
+            case ACTIVA:
+<span class="fc" id="L84">                producto.activar();</span>
+<span class="fc" id="L85">                break;</span>
+            case INACTIVA:
+<span class="fc" id="L87">                producto.inactivar();</span>
+<span class="fc" id="L88">                break;</span>
+            case CANCELADA:
+<span class="fc" id="L90">                producto.cancelar();</span>
+<span class="fc" id="L91">                break;</span>
+            default:
+<span class="nc" id="L93">                throw new BusinessException(&quot;Estado de cuenta no válido&quot;);</span>
+        }
+
+<span class="fc" id="L96">        return productoRepository.save(producto);</span>
+    }
+
+    @Override
+    public void eliminarProducto(Long id) {
+<span class="fc" id="L101">        Producto producto = productoRepository.findById(id)</span>
+<span class="pc" id="L102">                .orElseThrow(() -&gt; new ProductoNotFoundException(&quot;Producto no encontrado con ID: &quot; + id));</span>
+
+<span class="fc bfc" id="L104" title="All 2 branches covered.">        if (producto.getSaldo().compareTo(BigDecimal.ZERO) != 0) {</span>
+<span class="fc" id="L105">            throw new BusinessException(&quot;No se puede eliminar un producto con saldo diferente a cero&quot;);</span>
+        }
+
+<span class="fc" id="L108">        productoRepository.deleteById(id);</span>
+<span class="fc" id="L109">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

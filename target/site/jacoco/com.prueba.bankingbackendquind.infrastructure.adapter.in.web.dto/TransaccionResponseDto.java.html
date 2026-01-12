@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>TransaccionResponseDto.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">banking-Backend-Quind</a> &gt; <a href="index.source.html" class="el_package">com.prueba.bankingbackendquind.infrastructure.adapter.in.web.dto</a> &gt; <span class="el_source">TransaccionResponseDto.java</span></div><h1>TransaccionResponseDto.java</h1><pre class="source lang-java linenums">package com.prueba.bankingbackendquind.infrastructure.adapter.in.web.dto;
+
+
+import com.prueba.bankingbackendquind.domain.model.enums.TipoTransaccion;
+
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+
+public class TransaccionResponseDto {
+    private Long id;
+    private TipoTransaccion tipoTransaccion;
+    private BigDecimal monto;
+    private String descripcion;
+    private LocalDateTime fechaCreacion;
+    private Long cuentaOrigenId;
+    private Long cuentaDestinoId;
+    private String numeroCuentaOrigen;
+    private String numeroCuentaDestino;
+
+<span class="fc" id="L20">    public TransaccionResponseDto() {}</span>
+
+    public Long getId() {
+<span class="fc" id="L23">        return id;</span>
+    }
+
+    public void setId(Long id) {
+<span class="fc" id="L27">        this.id = id;</span>
+<span class="fc" id="L28">    }</span>
+
+    public TipoTransaccion getTipoTransaccion() {
+<span class="fc" id="L31">        return tipoTransaccion;</span>
+    }
+
+    public void setTipoTransaccion(TipoTransaccion tipoTransaccion) {
+<span class="fc" id="L35">        this.tipoTransaccion = tipoTransaccion;</span>
+<span class="fc" id="L36">    }</span>
+
+    public BigDecimal getMonto() {
+<span class="fc" id="L39">        return monto;</span>
+    }
+
+    public void setMonto(BigDecimal monto) {
+<span class="fc" id="L43">        this.monto = monto;</span>
+<span class="fc" id="L44">    }</span>
+
+    public String getDescripcion() {
+<span class="fc" id="L47">        return descripcion;</span>
+    }
+
+    public void setDescripcion(String descripcion) {
+<span class="fc" id="L51">        this.descripcion = descripcion;</span>
+<span class="fc" id="L52">    }</span>
+
+    public LocalDateTime getFechaCreacion() {
+<span class="fc" id="L55">        return fechaCreacion;</span>
+    }
+
+    public void setFechaCreacion(LocalDateTime fechaCreacion) {
+<span class="fc" id="L59">        this.fechaCreacion = fechaCreacion;</span>
+<span class="fc" id="L60">    }</span>
+
+    public Long getCuentaOrigenId() {
+<span class="fc" id="L63">        return cuentaOrigenId;</span>
+    }
+
+    public void setCuentaOrigenId(Long cuentaOrigenId) {
+<span class="nc" id="L67">        this.cuentaOrigenId = cuentaOrigenId;</span>
+<span class="nc" id="L68">    }</span>
+
+    public Long getCuentaDestinoId() {
+<span class="fc" id="L71">        return cuentaDestinoId;</span>
+    }
+
+    public void setCuentaDestinoId(Long cuentaDestinoId) {
+<span class="nc" id="L75">        this.cuentaDestinoId = cuentaDestinoId;</span>
+<span class="nc" id="L76">    }</span>
+
+    public String getNumeroCuentaOrigen() {
+<span class="fc" id="L79">        return numeroCuentaOrigen;</span>
+    }
+
+    public void setNumeroCuentaOrigen(String numeroCuentaOrigen) {
+<span class="fc" id="L83">        this.numeroCuentaOrigen = numeroCuentaOrigen;</span>
+<span class="fc" id="L84">    }</span>
+
+    public String getNumeroCuentaDestino() {
+<span class="fc" id="L87">        return numeroCuentaDestino;</span>
+    }
+
+    public void setNumeroCuentaDestino(String numeroCuentaDestino) {
+<span class="fc" id="L91">        this.numeroCuentaDestino = numeroCuentaDestino;</span>
+<span class="fc" id="L92">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

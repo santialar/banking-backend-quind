@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>TransaccionEntity.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">banking-Backend-Quind</a> &gt; <a href="index.source.html" class="el_package">com.prueba.bankingbackendquind.infrastructure.adapter.out.persistence.entity</a> &gt; <span class="el_source">TransaccionEntity.java</span></div><h1>TransaccionEntity.java</h1><pre class="source lang-java linenums">package com.prueba.bankingbackendquind.infrastructure.adapter.out.persistence.entity;
+
+import com.prueba.bankingbackendquind.domain.model.enums.TipoTransaccion;
+import jakarta.persistence.*;
+
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+
+@Entity
+@Table(name = &quot;transacciones&quot;)
+public class TransaccionEntity {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = &quot;tipo_transaccion&quot;, nullable = false)
+    private TipoTransaccion tipoTransaccion;
+
+    @Column(name = &quot;monto&quot;, nullable = false, precision = 15, scale = 2)
+    private BigDecimal monto;
+
+    @Column(name = &quot;descripcion&quot;)
+    private String descripcion;
+
+    @Column(name = &quot;fecha_creacion&quot;, nullable = false)
+    private LocalDateTime fechaCreacion;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = &quot;cuenta_origen_id&quot;)
+    private ProductoEntity cuentaOrigen;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = &quot;cuenta_destino_id&quot;)
+    private ProductoEntity cuentaDestino;
+
+    @Column(name = &quot;numero_cuenta_origen&quot;)
+    private String numeroCuentaOrigen;
+
+    @Column(name = &quot;numero_cuenta_destino&quot;)
+    private String numeroCuentaDestino;
+
+    @PrePersist
+    protected void onCreate() {
+<span class="nc" id="L45">        fechaCreacion = LocalDateTime.now();</span>
+<span class="nc" id="L46">    }</span>
+
+<span class="nc" id="L48">    public TransaccionEntity() {</span>
+<span class="nc" id="L49">    }</span>
+
+    public Long getId() {
+<span class="nc" id="L52">        return id;</span>
+    }
+
+    public void setId(Long id) {
+<span class="nc" id="L56">        this.id = id;</span>
+<span class="nc" id="L57">    }</span>
+
+    public TipoTransaccion getTipoTransaccion() {
+<span class="nc" id="L60">        return tipoTransaccion;</span>
+    }
+
+    public void setTipoTransaccion(TipoTransaccion tipoTransaccion) {
+<span class="nc" id="L64">        this.tipoTransaccion = tipoTransaccion;</span>
+<span class="nc" id="L65">    }</span>
+
+    public BigDecimal getMonto() {
+<span class="nc" id="L68">        return monto;</span>
+    }
+
+    public void setMonto(BigDecimal monto) {
+<span class="nc" id="L72">        this.monto = monto;</span>
+<span class="nc" id="L73">    }</span>
+
+    public String getDescripcion() {
+<span class="nc" id="L76">        return descripcion;</span>
+    }
+
+    public void setDescripcion(String descripcion) {
+<span class="nc" id="L80">        this.descripcion = descripcion;</span>
+<span class="nc" id="L81">    }</span>
+
+    public LocalDateTime getFechaCreacion() {
+<span class="nc" id="L84">        return fechaCreacion;</span>
+    }
+
+    public void setFechaCreacion(LocalDateTime fechaCreacion) {
+<span class="nc" id="L88">        this.fechaCreacion = fechaCreacion;</span>
+<span class="nc" id="L89">    }</span>
+
+    public ProductoEntity getCuentaOrigen() {
+<span class="nc" id="L92">        return cuentaOrigen;</span>
+    }
+
+    public void setCuentaOrigen(ProductoEntity cuentaOrigen) {
+<span class="nc" id="L96">        this.cuentaOrigen = cuentaOrigen;</span>
+<span class="nc" id="L97">    }</span>
+
+    public ProductoEntity getCuentaDestino() {
+<span class="nc" id="L100">        return cuentaDestino;</span>
+    }
+
+    public void setCuentaDestino(ProductoEntity cuentaDestino) {
+<span class="nc" id="L104">        this.cuentaDestino = cuentaDestino;</span>
+<span class="nc" id="L105">    }</span>
+
+    public String getNumeroCuentaOrigen() {
+<span class="nc" id="L108">        return numeroCuentaOrigen;</span>
+    }
+
+    public void setNumeroCuentaOrigen(String numeroCuentaOrigen) {
+<span class="nc" id="L112">        this.numeroCuentaOrigen = numeroCuentaOrigen;</span>
+<span class="nc" id="L113">    }</span>
+
+    public String getNumeroCuentaDestino() {
+<span class="nc" id="L116">        return numeroCuentaDestino;</span>
+    }
+
+    public void setNumeroCuentaDestino(String numeroCuentaDestino) {
+<span class="nc" id="L120">        this.numeroCuentaDestino = numeroCuentaDestino;</span>
+<span class="nc" id="L121">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

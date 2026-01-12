@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>TransaccionController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">banking-Backend-Quind</a> &gt; <a href="index.source.html" class="el_package">com.prueba.bankingbackendquind.infrastructure.adapter.in.web.controller</a> &gt; <span class="el_source">TransaccionController.java</span></div><h1>TransaccionController.java</h1><pre class="source lang-java linenums">package com.prueba.bankingbackendquind.infrastructure.adapter.in.web.controller;
+
+
+import com.prueba.bankingbackendquind.domain.model.Transaccion;
+import com.prueba.bankingbackendquind.domain.port.in.TransaccionUseCase;
+import com.prueba.bankingbackendquind.infrastructure.adapter.in.web.dto.TransaccionRequestDto;
+import com.prueba.bankingbackendquind.infrastructure.adapter.in.web.dto.TransaccionResponseDto;
+import com.prueba.bankingbackendquind.infrastructure.adapter.in.web.mapper.TransaccionWebMapper;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping(&quot;/api/transacciones&quot;)
+@Tag(name = &quot;Transacciones&quot;, description = &quot;API para gestión de transacciones financieras&quot;)
+public class TransaccionController {
+
+    private final TransaccionUseCase transaccionUseCase;
+    private final TransaccionWebMapper transaccionWebMapper;
+
+    public TransaccionController(TransaccionUseCase transaccionUseCase,
+<span class="fc" id="L28">                                 TransaccionWebMapper transaccionWebMapper) {</span>
+<span class="fc" id="L29">        this.transaccionUseCase = transaccionUseCase;</span>
+<span class="fc" id="L30">        this.transaccionWebMapper = transaccionWebMapper;</span>
+<span class="fc" id="L31">    }</span>
+
+    @PostMapping(&quot;/consignacion&quot;)
+    @Operation(summary = &quot;Realizar consignación&quot;, description = &quot;Realiza una consignación a una cuenta&quot;)
+    public ResponseEntity&lt;TransaccionResponseDto&gt; realizarConsignacion(
+            @Valid @RequestBody TransaccionRequestDto transaccionRequestDto) {
+<span class="fc" id="L37">        Transaccion transaccion = transaccionUseCase.realizarConsignacion(</span>
+<span class="fc" id="L38">                transaccionRequestDto.getNumeroCuentaOrigen(),</span>
+<span class="fc" id="L39">                transaccionRequestDto.getMonto(),</span>
+<span class="fc" id="L40">                transaccionRequestDto.getDescripcion()</span>
+        );
+<span class="fc" id="L42">        TransaccionResponseDto responseDto = transaccionWebMapper.toResponseDto(transaccion);</span>
+<span class="fc" id="L43">        return new ResponseEntity&lt;&gt;(responseDto, HttpStatus.CREATED);</span>
+    }
+
+    @PostMapping(&quot;/retiro&quot;)
+    @Operation(summary = &quot;Realizar retiro&quot;, description = &quot;Realiza un retiro de una cuenta&quot;)
+    public ResponseEntity&lt;TransaccionResponseDto&gt; realizarRetiro(
+            @Valid @RequestBody TransaccionRequestDto transaccionRequestDto) {
+<span class="fc" id="L50">        Transaccion transaccion = transaccionUseCase.realizarRetiro(</span>
+<span class="fc" id="L51">                transaccionRequestDto.getNumeroCuentaOrigen(),</span>
+<span class="fc" id="L52">                transaccionRequestDto.getMonto(),</span>
+<span class="fc" id="L53">                transaccionRequestDto.getDescripcion()</span>
+        );
+<span class="fc" id="L55">        TransaccionResponseDto responseDto = transaccionWebMapper.toResponseDto(transaccion);</span>
+<span class="fc" id="L56">        return new ResponseEntity&lt;&gt;(responseDto, HttpStatus.CREATED);</span>
+    }
+
+    @PostMapping(&quot;/transferencia&quot;)
+    @Operation(summary = &quot;Realizar transferencia&quot;, description = &quot;Realiza una transferencia entre cuentas&quot;)
+    public ResponseEntity&lt;TransaccionResponseDto&gt; realizarTransferencia(
+            @Valid @RequestBody TransaccionRequestDto transaccionRequestDto) {
+<span class="fc bfc" id="L63" title="All 2 branches covered.">        if (transaccionRequestDto.getNumeroCuentaDestino() == null ||</span>
+<span class="pc bpc" id="L64" title="1 of 2 branches missed.">                transaccionRequestDto.getNumeroCuentaDestino().trim().isEmpty()) {</span>
+<span class="fc" id="L65">            throw new IllegalArgumentException(&quot;El número de cuenta destino es obligatorio para transferencias&quot;);</span>
+        }
+
+<span class="fc" id="L68">        Transaccion transaccion = transaccionUseCase.realizarTransferencia(</span>
+<span class="fc" id="L69">                transaccionRequestDto.getNumeroCuentaOrigen(),</span>
+<span class="fc" id="L70">                transaccionRequestDto.getNumeroCuentaDestino(),</span>
+<span class="fc" id="L71">                transaccionRequestDto.getMonto(),</span>
+<span class="fc" id="L72">                transaccionRequestDto.getDescripcion()</span>
+        );
+<span class="fc" id="L74">        TransaccionResponseDto responseDto = transaccionWebMapper.toResponseDto(transaccion);</span>
+<span class="fc" id="L75">        return new ResponseEntity&lt;&gt;(responseDto, HttpStatus.CREATED);</span>
+    }
+
+    @GetMapping(&quot;/{id}&quot;)
+    @Operation(summary = &quot;Obtener transacción por ID&quot;, description = &quot;Obtiene una transacción específica por su ID&quot;)
+    public ResponseEntity&lt;TransaccionResponseDto&gt; obtenerTransaccionPorId(
+            @Parameter(description = &quot;ID de la transacción&quot;) @PathVariable Long id) {
+<span class="fc" id="L82">        Transaccion transaccion = transaccionUseCase.obtenerTransaccionPorId(id);</span>
+<span class="fc" id="L83">        TransaccionResponseDto responseDto = transaccionWebMapper.toResponseDto(transaccion);</span>
+<span class="fc" id="L84">        return ResponseEntity.ok(responseDto);</span>
+    }
+
+    @GetMapping(&quot;/cuenta/{numeroCuenta}&quot;)
+    @Operation(summary = &quot;Obtener transacciones por cuenta&quot;,
+            description = &quot;Obtiene todas las transacciones de una cuenta específica&quot;)
+    public ResponseEntity&lt;List&lt;TransaccionResponseDto&gt;&gt; obtenerTransaccionesPorCuenta(
+            @Parameter(description = &quot;Número de cuenta&quot;) @PathVariable String numeroCuenta) {
+<span class="fc" id="L92">        List&lt;Transaccion&gt; transacciones = transaccionUseCase.obtenerTransaccionesPorCuenta(numeroCuenta);</span>
+<span class="fc" id="L93">        List&lt;TransaccionResponseDto&gt; responseDtos = transaccionWebMapper.toResponseDtoList(transacciones);</span>
+<span class="fc" id="L94">        return ResponseEntity.ok(responseDtos);</span>
+    }
+
+    @GetMapping
+    @Operation(summary = &quot;Obtener todas las transacciones&quot;, description = &quot;Obtiene la lista de todas las transacciones&quot;)
+    public ResponseEntity&lt;List&lt;TransaccionResponseDto&gt;&gt; obtenerTodasLasTransacciones() {
+<span class="fc" id="L100">        List&lt;Transaccion&gt; transacciones = transaccionUseCase.obtenerTodasLasTransacciones();</span>
+<span class="fc" id="L101">        List&lt;TransaccionResponseDto&gt; responseDtos = transaccionWebMapper.toResponseDtoList(transacciones);</span>
+<span class="fc" id="L102">        return ResponseEntity.ok(responseDtos);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>
