@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ClienteEntity.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">banking-Backend-Quind</a> &gt; <a href="index.source.html" class="el_package">com.prueba.bankingbackendquind.infrastructure.adapter.out.persistence.entity</a> &gt; <span class="el_source">ClienteEntity.java</span></div><h1>ClienteEntity.java</h1><pre class="source lang-java linenums">package com.prueba.bankingbackendquind.infrastructure.adapter.out.persistence.entity;
+
+import com.prueba.bankingbackendquind.domain.model.enums.TipoIdentificacion;
+import jakarta.persistence.*;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
+
+@Entity
+@Table(name = &quot;clientes&quot;)
+public class ClienteEntity {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = &quot;tipo_identificacion&quot;, nullable = false)
+    private TipoIdentificacion tipoIdentificacion;
+
+    @Column(name = &quot;numero_identificacion&quot;, nullable = false, unique = true)
+    private String numeroIdentificacion;
+
+    @Column(name = &quot;nombres&quot;, nullable = false)
+    private String nombres;
+
+    @Column(name = &quot;apellido&quot;, nullable = false)
+    private String apellido;
+
+    @Column(name = &quot;correo_electronico&quot;, nullable = false)
+    private String correoElectronico;
+
+    @Column(name = &quot;fecha_nacimiento&quot;, nullable = false)
+    private LocalDate fechaNacimiento;
+
+    @Column(name = &quot;fecha_creacion&quot;, nullable = false)
+    private LocalDateTime fechaCreacion;
+
+    @Column(name = &quot;fecha_modificacion&quot;, nullable = false)
+    private LocalDateTime fechaModificacion;
+
+    @OneToMany(mappedBy = &quot;cliente&quot;, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List&lt;ProductoEntity&gt; productos;
+
+    @PrePersist
+    protected void onCreate() {
+<span class="nc" id="L47">        fechaCreacion = LocalDateTime.now();</span>
+<span class="nc" id="L48">        fechaModificacion = LocalDateTime.now();</span>
+<span class="nc" id="L49">    }</span>
+
+    @PreUpdate
+    protected void onUpdate() {
+<span class="nc" id="L53">        fechaModificacion = LocalDateTime.now();</span>
+<span class="nc" id="L54">    }</span>
+
+<span class="nc" id="L56">    public ClienteEntity() {</span>
+<span class="nc" id="L57">    }</span>
+
+    public Long getId() {
+<span class="nc" id="L60">        return id;</span>
+    }
+
+    public void setId(Long id) {
+<span class="nc" id="L64">        this.id = id;</span>
+<span class="nc" id="L65">    }</span>
+
+    public TipoIdentificacion getTipoIdentificacion() {
+<span class="nc" id="L68">        return tipoIdentificacion;</span>
+    }
+
+    public void setTipoIdentificacion(TipoIdentificacion tipoIdentificacion) {
+<span class="nc" id="L72">        this.tipoIdentificacion = tipoIdentificacion;</span>
+<span class="nc" id="L73">    }</span>
+
+    public String getNumeroIdentificacion() {
+<span class="nc" id="L76">        return numeroIdentificacion;</span>
+    }
+
+    public void setNumeroIdentificacion(String numeroIdentificacion) {
+<span class="nc" id="L80">        this.numeroIdentificacion = numeroIdentificacion;</span>
+<span class="nc" id="L81">    }</span>
+
+    public String getNombres() {
+<span class="nc" id="L84">        return nombres;</span>
+    }
+
+    public void setNombres(String nombres) {
+<span class="nc" id="L88">        this.nombres = nombres;</span>
+<span class="nc" id="L89">    }</span>
+
+    public String getApellido() {
+<span class="nc" id="L92">        return apellido;</span>
+    }
+
+    public void setApellido(String apellido) {
+<span class="nc" id="L96">        this.apellido = apellido;</span>
+<span class="nc" id="L97">    }</span>
+
+    public String getCorreoElectronico() {
+<span class="nc" id="L100">        return correoElectronico;</span>
+    }
+
+    public void setCorreoElectronico(String correoElectronico) {
+<span class="nc" id="L104">        this.correoElectronico = correoElectronico;</span>
+<span class="nc" id="L105">    }</span>
+
+    public LocalDate getFechaNacimiento() {
+<span class="nc" id="L108">        return fechaNacimiento;</span>
+    }
+
+    public void setFechaNacimiento(LocalDate fechaNacimiento) {
+<span class="nc" id="L112">        this.fechaNacimiento = fechaNacimiento;</span>
+<span class="nc" id="L113">    }</span>
+
+    public LocalDateTime getFechaCreacion() {
+<span class="nc" id="L116">        return fechaCreacion;</span>
+    }
+
+    public void setFechaCreacion(LocalDateTime fechaCreacion) {
+<span class="nc" id="L120">        this.fechaCreacion = fechaCreacion;</span>
+<span class="nc" id="L121">    }</span>
+
+    public LocalDateTime getFechaModificacion() {
+<span class="nc" id="L124">        return fechaModificacion;</span>
+    }
+
+    public void setFechaModificacion(LocalDateTime fechaModificacion) {
+<span class="nc" id="L128">        this.fechaModificacion = fechaModificacion;</span>
+<span class="nc" id="L129">    }</span>
+
+    public List&lt;ProductoEntity&gt; getProductos() {
+<span class="nc" id="L132">        return productos;</span>
+    }
+
+    public void setProductos(List&lt;ProductoEntity&gt; productos) {
+<span class="nc" id="L136">        this.productos = productos;</span>
+<span class="nc" id="L137">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

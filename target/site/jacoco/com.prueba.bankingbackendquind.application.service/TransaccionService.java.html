@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>TransaccionService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">banking-Backend-Quind</a> &gt; <a href="index.source.html" class="el_package">com.prueba.bankingbackendquind.application.service</a> &gt; <span class="el_source">TransaccionService.java</span></div><h1>TransaccionService.java</h1><pre class="source lang-java linenums">package com.prueba.bankingbackendquind.application.service;
+
+
+import com.prueba.bankingbackendquind.domain.exception.ProductoNotFoundException;
+import com.prueba.bankingbackendquind.domain.exception.TransaccionException;
+import com.prueba.bankingbackendquind.domain.model.Producto;
+import com.prueba.bankingbackendquind.domain.model.Transaccion;
+import com.prueba.bankingbackendquind.domain.model.enums.EstadoCuenta;
+import com.prueba.bankingbackendquind.domain.model.enums.TipoTransaccion;
+import com.prueba.bankingbackendquind.domain.port.in.TransaccionUseCase;
+import com.prueba.bankingbackendquind.domain.port.out.ProductoRepositoryPort;
+import com.prueba.bankingbackendquind.domain.port.out.TransaccionRepositoryPort;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+
+@Service
+@Transactional
+public class TransaccionService implements TransaccionUseCase {
+
+    private final TransaccionRepositoryPort transaccionRepository;
+    private final ProductoRepositoryPort productoRepository;
+
+    public TransaccionService(TransaccionRepositoryPort transaccionRepository,
+<span class="fc" id="L28">                              ProductoRepositoryPort productoRepository) {</span>
+<span class="fc" id="L29">        this.transaccionRepository = transaccionRepository;</span>
+<span class="fc" id="L30">        this.productoRepository = productoRepository;</span>
+<span class="fc" id="L31">    }</span>
+
+    @Override
+    public Transaccion realizarConsignacion(String numeroCuenta, BigDecimal monto, String descripcion) {
+<span class="fc" id="L35">        validarMonto(monto);</span>
+
+<span class="fc" id="L37">        Producto cuenta = obtenerCuentaActiva(numeroCuenta);</span>
+
+<span class="fc" id="L39">        cuenta.actualizarSaldo(monto);</span>
+<span class="fc" id="L40">        productoRepository.save(cuenta);</span>
+
+<span class="fc" id="L42">        Transaccion transaccion = new Transaccion(</span>
+                TipoTransaccion.CONSIGNACION,
+                monto,
+                descripcion,
+<span class="fc" id="L46">                cuenta.getId(),</span>
+                numeroCuenta
+        );
+
+<span class="fc" id="L50">        return transaccionRepository.save(transaccion);</span>
+    }
+
+    @Override
+    public Transaccion realizarRetiro(String numeroCuenta, BigDecimal monto, String descripcion) {
+<span class="fc" id="L55">        validarMonto(monto);</span>
+
+<span class="fc" id="L57">        Producto cuenta = obtenerCuentaActiva(numeroCuenta);</span>
+
+<span class="fc bfc" id="L59" title="All 2 branches covered.">        if (!cuenta.puedeRetirar(monto)) {</span>
+<span class="fc" id="L60">            throw new TransaccionException(&quot;Saldo insuficiente para realizar el retiro&quot;);</span>
+        }
+
+<span class="fc" id="L63">        cuenta.actualizarSaldo(monto.negate());</span>
+<span class="fc" id="L64">        productoRepository.save(cuenta);</span>
+
+<span class="fc" id="L66">        Transaccion transaccion = new Transaccion(</span>
+                TipoTransaccion.RETIRO,
+                monto,
+                descripcion,
+<span class="fc" id="L70">                cuenta.getId(),</span>
+                numeroCuenta
+        );
+
+<span class="fc" id="L74">        return transaccionRepository.save(transaccion);</span>
+    }
+
+    @Override
+    public Transaccion realizarTransferencia(String numeroCuentaOrigen, String numeroCuentaDestino,
+                                             BigDecimal monto, String descripcion) {
+<span class="fc" id="L80">        validarMonto(monto);</span>
+
+<span class="fc bfc" id="L82" title="All 2 branches covered.">        if (numeroCuentaOrigen.equals(numeroCuentaDestino)) {</span>
+<span class="fc" id="L83">            throw new TransaccionException(&quot;No se puede transferir a la misma cuenta&quot;);</span>
+        }
+
+<span class="fc" id="L86">        Producto cuentaOrigen = obtenerCuentaActiva(numeroCuentaOrigen);</span>
+<span class="fc" id="L87">        Producto cuentaDestino = obtenerCuentaActiva(numeroCuentaDestino);</span>
+
+<span class="fc bfc" id="L89" title="All 2 branches covered.">        if (!cuentaOrigen.puedeRetirar(monto)) {</span>
+<span class="fc" id="L90">            throw new TransaccionException(&quot;Saldo insuficiente en la cuenta origen para realizar la transferencia&quot;);</span>
+        }
+
+<span class="fc" id="L93">        cuentaOrigen.actualizarSaldo(monto.negate());</span>
+<span class="fc" id="L94">        cuentaDestino.actualizarSaldo(monto);</span>
+
+<span class="fc" id="L96">        productoRepository.save(cuentaOrigen);</span>
+<span class="fc" id="L97">        productoRepository.save(cuentaDestino);</span>
+
+<span class="fc" id="L99">        Transaccion transaccion = new Transaccion(</span>
+                TipoTransaccion.TRANSFERENCIA,
+                monto,
+                descripcion,
+<span class="fc" id="L103">                cuentaOrigen.getId(),</span>
+<span class="fc" id="L104">                cuentaDestino.getId(),</span>
+                numeroCuentaOrigen,
+                numeroCuentaDestino
+        );
+
+<span class="fc" id="L109">        return transaccionRepository.save(transaccion);</span>
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List&lt;Transaccion&gt; obtenerTransaccionesPorCuenta(String numeroCuenta) {
+<span class="fc" id="L115">        List&lt;Transaccion&gt; transacciones = new ArrayList&lt;&gt;();</span>
+
+<span class="fc" id="L117">        transacciones.addAll(transaccionRepository.findByNumeroCuentaOrigen(numeroCuenta));</span>
+
+<span class="fc" id="L119">        transacciones.addAll(transaccionRepository.findByNumeroCuentaDestino(numeroCuenta));</span>
+
+<span class="fc" id="L121">        transacciones.sort((t1, t2) -&gt; t2.getFechaCreacion().compareTo(t1.getFechaCreacion()));</span>
+
+<span class="fc" id="L123">        return transacciones;</span>
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List&lt;Transaccion&gt; obtenerTodasLasTransacciones() {
+<span class="fc" id="L129">        return transaccionRepository.findAll();</span>
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Transaccion obtenerTransaccionPorId(Long id) {
+<span class="fc" id="L135">        return transaccionRepository.findById(id)</span>
+<span class="fc" id="L136">                .orElseThrow(() -&gt; new TransaccionException(&quot;Transacción no encontrada con ID: &quot; + id));</span>
+    }
+
+    private void validarMonto(BigDecimal monto) {
+<span class="fc bfc" id="L140" title="All 4 branches covered.">        if (monto == null || monto.compareTo(BigDecimal.ZERO) &lt;= 0) {</span>
+<span class="fc" id="L141">            throw new TransaccionException(&quot;El monto debe ser mayor a cero&quot;);</span>
+        }
+<span class="fc" id="L143">    }</span>
+
+    private Producto obtenerCuentaActiva(String numeroCuenta) {
+<span class="fc" id="L146">        Producto cuenta = productoRepository.findByNumeroCuenta(numeroCuenta)</span>
+<span class="fc" id="L147">                .orElseThrow(() -&gt; new ProductoNotFoundException(&quot;Cuenta no encontrada: &quot; + numeroCuenta));</span>
+
+<span class="fc bfc" id="L149" title="All 2 branches covered.">        if (cuenta.getEstado() != EstadoCuenta.ACTIVA) {</span>
+<span class="fc" id="L150">            throw new TransaccionException(&quot;La cuenta debe estar activa para realizar transacciones&quot;);</span>
+        }
+
+<span class="fc" id="L153">        return cuenta;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

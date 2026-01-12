@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Cliente.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">banking-Backend-Quind</a> &gt; <a href="index.source.html" class="el_package">com.prueba.bankingbackendquind.domain.model</a> &gt; <span class="el_source">Cliente.java</span></div><h1>Cliente.java</h1><pre class="source lang-java linenums">package com.prueba.bankingbackendquind.domain.model;
+
+import com.prueba.bankingbackendquind.domain.model.enums.TipoIdentificacion;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
+
+public class Cliente {
+    private Long id;
+    private TipoIdentificacion tipoIdentificacion;
+    private String numeroIdentificacion;
+    private String nombres;
+    private String apellido;
+    private String correoElectronico;
+    private LocalDate fechaNacimiento;
+    private LocalDateTime fechaCreacion;
+    private LocalDateTime fechaModificacion;
+    private List&lt;Producto&gt; productos;
+
+<span class="fc" id="L21">    public Cliente() {</span>
+<span class="fc" id="L22">    }</span>
+
+    public Cliente(TipoIdentificacion tipoIdentificacion, String numeroIdentificacion,
+                   String nombres, String apellido, String correoElectronico,
+<span class="nc" id="L26">                   LocalDate fechaNacimiento) {</span>
+<span class="nc" id="L27">        this.tipoIdentificacion = tipoIdentificacion;</span>
+<span class="nc" id="L28">        this.numeroIdentificacion = numeroIdentificacion;</span>
+<span class="nc" id="L29">        this.nombres = nombres;</span>
+<span class="nc" id="L30">        this.apellido = apellido;</span>
+<span class="nc" id="L31">        this.correoElectronico = correoElectronico;</span>
+<span class="nc" id="L32">        this.fechaNacimiento = fechaNacimiento;</span>
+<span class="nc" id="L33">        this.fechaCreacion = LocalDateTime.now();</span>
+<span class="nc" id="L34">        this.fechaModificacion = LocalDateTime.now();</span>
+<span class="nc" id="L35">    }</span>
+
+    public boolean esMayorDeEdad() {
+<span class="fc" id="L38">        return fechaNacimiento.isBefore(LocalDate.now().minusYears(18));</span>
+    }
+
+    public boolean tieneProductosVinculados() {
+<span class="nc bnc" id="L42" title="All 4 branches missed.">        return productos != null &amp;&amp; !productos.isEmpty();</span>
+    }
+
+    public void actualizarFechaModificacion() {
+<span class="fc" id="L46">        this.fechaModificacion = LocalDateTime.now();</span>
+<span class="fc" id="L47">    }</span>
+
+    public Long getId() {
+<span class="fc" id="L50">        return id;</span>
+    }
+
+    public void setId(Long id) {
+<span class="fc" id="L54">        this.id = id;</span>
+<span class="fc" id="L55">    }</span>
+
+    public TipoIdentificacion getTipoIdentificacion() {
+<span class="fc" id="L58">        return tipoIdentificacion;</span>
+    }
+
+    public void setTipoIdentificacion(TipoIdentificacion tipoIdentificacion) {
+<span class="fc" id="L62">        this.tipoIdentificacion = tipoIdentificacion;</span>
+<span class="fc" id="L63">    }</span>
+
+    public String getNumeroIdentificacion() {
+<span class="fc" id="L66">        return numeroIdentificacion;</span>
+    }
+
+    public void setNumeroIdentificacion(String numeroIdentificacion) {
+<span class="fc" id="L70">        this.numeroIdentificacion = numeroIdentificacion;</span>
+<span class="fc" id="L71">    }</span>
+
+    public String getNombres() {
+<span class="fc" id="L74">        return nombres;</span>
+    }
+
+    public void setNombres(String nombres) {
+<span class="fc" id="L78">        this.nombres = nombres;</span>
+<span class="fc" id="L79">    }</span>
+
+    public String getApellido() {
+<span class="fc" id="L82">        return apellido;</span>
+    }
+
+    public void setApellido(String apellido) {
+<span class="fc" id="L86">        this.apellido = apellido;</span>
+<span class="fc" id="L87">    }</span>
+
+    public String getCorreoElectronico() {
+<span class="fc" id="L90">        return correoElectronico;</span>
+    }
+
+    public void setCorreoElectronico(String correoElectronico) {
+<span class="fc" id="L94">        this.correoElectronico = correoElectronico;</span>
+<span class="fc" id="L95">    }</span>
+
+    public LocalDate getFechaNacimiento() {
+<span class="fc" id="L98">        return fechaNacimiento;</span>
+    }
+
+    public void setFechaNacimiento(LocalDate fechaNacimiento) {
+<span class="fc" id="L102">        this.fechaNacimiento = fechaNacimiento;</span>
+<span class="fc" id="L103">    }</span>
+
+    public LocalDateTime getFechaCreacion() {
+<span class="nc" id="L106">        return fechaCreacion;</span>
+    }
+
+    public void setFechaCreacion(LocalDateTime fechaCreacion) {
+<span class="fc" id="L110">        this.fechaCreacion = fechaCreacion;</span>
+<span class="fc" id="L111">    }</span>
+
+    public LocalDateTime getFechaModificacion() {
+<span class="nc" id="L114">        return fechaModificacion;</span>
+    }
+
+    public void setFechaModificacion(LocalDateTime fechaModificacion) {
+<span class="fc" id="L118">        this.fechaModificacion = fechaModificacion;</span>
+<span class="fc" id="L119">    }</span>
+
+    public List&lt;Producto&gt; getProductos() {
+<span class="nc" id="L122">        return productos;</span>
+    }
+
+    public void setProductos(List&lt;Producto&gt; productos) {
+<span class="nc" id="L126">        this.productos = productos;</span>
+<span class="nc" id="L127">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>
