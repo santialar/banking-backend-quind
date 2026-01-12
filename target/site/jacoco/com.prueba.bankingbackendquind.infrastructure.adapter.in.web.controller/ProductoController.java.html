@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ProductoController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">banking-Backend-Quind</a> &gt; <a href="index.source.html" class="el_package">com.prueba.bankingbackendquind.infrastructure.adapter.in.web.controller</a> &gt; <span class="el_source">ProductoController.java</span></div><h1>ProductoController.java</h1><pre class="source lang-java linenums">package com.prueba.bankingbackendquind.infrastructure.adapter.in.web.controller;
+
+
+import com.prueba.bankingbackendquind.domain.model.Producto;
+import com.prueba.bankingbackendquind.domain.port.in.ProductoUseCase;
+import com.prueba.bankingbackendquind.infrastructure.adapter.in.web.dto.EstadoCuentaRequestDto;
+import com.prueba.bankingbackendquind.infrastructure.adapter.in.web.dto.ProductoRequestDto;
+import com.prueba.bankingbackendquind.infrastructure.adapter.in.web.dto.ProductoResponseDto;
+import com.prueba.bankingbackendquind.infrastructure.adapter.in.web.mapper.ProductoWebMapper;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping(&quot;/api/productos&quot;)
+@Tag(name = &quot;Productos&quot;, description = &quot;API para gestión de productos financieros&quot;)
+public class ProductoController {
+
+    private final ProductoUseCase productoUseCase;
+    private final ProductoWebMapper productoWebMapper;
+
+<span class="fc" id="L28">    public ProductoController(ProductoUseCase productoUseCase, ProductoWebMapper productoWebMapper) {</span>
+<span class="fc" id="L29">        this.productoUseCase = productoUseCase;</span>
+<span class="fc" id="L30">        this.productoWebMapper = productoWebMapper;</span>
+<span class="fc" id="L31">    }</span>
+
+    @PostMapping
+    @Operation(summary = &quot;Crear un nuevo producto&quot;, description = &quot;Crea un nuevo producto financiero&quot;)
+    public ResponseEntity&lt;ProductoResponseDto&gt; crearProducto(@Valid @RequestBody ProductoRequestDto productoRequestDto) {
+<span class="fc" id="L36">        Producto producto = productoUseCase.crearProducto(</span>
+<span class="fc" id="L37">                productoRequestDto.getTipoCuenta(),</span>
+<span class="fc" id="L38">                productoRequestDto.getClienteId(),</span>
+<span class="fc" id="L39">                productoRequestDto.isExentaGMF()</span>
+        );
+<span class="fc" id="L41">        ProductoResponseDto responseDto = productoWebMapper.toResponseDto(producto);</span>
+<span class="fc" id="L42">        return new ResponseEntity&lt;&gt;(responseDto, HttpStatus.CREATED);</span>
+    }
+
+    @GetMapping(&quot;/{id}&quot;)
+    @Operation(summary = &quot;Obtener producto por ID&quot;, description = &quot;Obtiene un producto específico por su ID&quot;)
+    public ResponseEntity&lt;ProductoResponseDto&gt; obtenerProductoPorId(
+            @Parameter(description = &quot;ID del producto&quot;) @PathVariable Long id) {
+<span class="fc" id="L49">        Producto producto = productoUseCase.obtenerProductoPorId(id);</span>
+<span class="fc" id="L50">        ProductoResponseDto responseDto = productoWebMapper.toResponseDto(producto);</span>
+<span class="fc" id="L51">        return ResponseEntity.ok(responseDto);</span>
+    }
+
+    @GetMapping(&quot;/cuenta/{numeroCuenta}&quot;)
+    @Operation(summary = &quot;Obtener producto por número de cuenta&quot;,
+            description = &quot;Obtiene un producto específico por su número de cuenta&quot;)
+    public ResponseEntity&lt;ProductoResponseDto&gt; obtenerProductoPorNumeroCuenta(
+            @Parameter(description = &quot;Número de cuenta del producto&quot;)
+            @PathVariable String numeroCuenta) {
+<span class="fc" id="L60">        Producto producto = productoUseCase.obtenerProductoPorNumeroCuenta(numeroCuenta);</span>
+<span class="fc" id="L61">        ProductoResponseDto responseDto = productoWebMapper.toResponseDto(producto);</span>
+<span class="fc" id="L62">        return ResponseEntity.ok(responseDto);</span>
+    }
+
+    @GetMapping(&quot;/cliente/{clienteId}&quot;)
+    @Operation(summary = &quot;Obtener productos por cliente&quot;,
+            description = &quot;Obtiene todos los productos de un cliente específico&quot;)
+    public ResponseEntity&lt;List&lt;ProductoResponseDto&gt;&gt; obtenerProductosPorCliente(
+            @Parameter(description = &quot;ID del cliente&quot;) @PathVariable Long clienteId) {
+<span class="fc" id="L70">        List&lt;Producto&gt; productos = productoUseCase.obtenerProductosPorCliente(clienteId);</span>
+<span class="fc" id="L71">        List&lt;ProductoResponseDto&gt; responseDtos = productoWebMapper.toResponseDtoList(productos);</span>
+<span class="fc" id="L72">        return ResponseEntity.ok(responseDtos);</span>
+    }
+
+    @GetMapping
+    @Operation(summary = &quot;Obtener todos los productos&quot;, description = &quot;Obtiene la lista de todos los productos&quot;)
+    public ResponseEntity&lt;List&lt;ProductoResponseDto&gt;&gt; obtenerTodosLosProductos() {
+<span class="fc" id="L78">        List&lt;Producto&gt; productos = productoUseCase.obtenerTodosLosProductos();</span>
+<span class="fc" id="L79">        List&lt;ProductoResponseDto&gt; responseDtos = productoWebMapper.toResponseDtoList(productos);</span>
+<span class="fc" id="L80">        return ResponseEntity.ok(responseDtos);</span>
+    }
+
+    @PatchMapping(&quot;/{id}/estado&quot;)
+    @Operation(summary = &quot;Cambiar estado del producto&quot;, description = &quot;Cambia el estado de un producto financiero&quot;)
+    public ResponseEntity&lt;ProductoResponseDto&gt; cambiarEstadoProducto(
+            @Parameter(description = &quot;ID del producto&quot;) @PathVariable Long id,
+            @Valid @RequestBody EstadoCuentaRequestDto estadoCuentaRequestDto) {
+<span class="fc" id="L88">        Producto producto = productoUseCase.cambiarEstadoProducto(id, estadoCuentaRequestDto.getEstado());</span>
+<span class="fc" id="L89">        ProductoResponseDto responseDto = productoWebMapper.toResponseDto(producto);</span>
+<span class="fc" id="L90">        return ResponseEntity.ok(responseDto);</span>
+    }
+
+    @DeleteMapping(&quot;/{id}&quot;)
+    @Operation(summary = &quot;Eliminar producto&quot;, description = &quot;Elimina un producto del sistema&quot;)
+    public ResponseEntity&lt;Void&gt; eliminarProducto(
+            @Parameter(description = &quot;ID del producto&quot;) @PathVariable Long id) {
+<span class="fc" id="L97">        productoUseCase.eliminarProducto(id);</span>
+<span class="fc" id="L98">        return ResponseEntity.noContent().build();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

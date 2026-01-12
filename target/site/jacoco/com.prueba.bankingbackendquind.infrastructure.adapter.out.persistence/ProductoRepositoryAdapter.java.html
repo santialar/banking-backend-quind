@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ProductoRepositoryAdapter.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">banking-Backend-Quind</a> &gt; <a href="index.source.html" class="el_package">com.prueba.bankingbackendquind.infrastructure.adapter.out.persistence</a> &gt; <span class="el_source">ProductoRepositoryAdapter.java</span></div><h1>ProductoRepositoryAdapter.java</h1><pre class="source lang-java linenums">package com.prueba.bankingbackendquind.infrastructure.adapter.out.persistence;
+
+
+import com.prueba.bankingbackendquind.domain.model.Producto;
+import com.prueba.bankingbackendquind.domain.port.out.ProductoRepositoryPort;
+import com.prueba.bankingbackendquind.infrastructure.adapter.out.persistence.entity.ClienteEntity;
+import com.prueba.bankingbackendquind.infrastructure.adapter.out.persistence.entity.ProductoEntity;
+import com.prueba.bankingbackendquind.infrastructure.adapter.out.persistence.mapper.ProductoMapper;
+import com.prueba.bankingbackendquind.infrastructure.adapter.out.persistence.repository.ClienteJpaRepository;
+import com.prueba.bankingbackendquind.infrastructure.adapter.out.persistence.repository.ProductoJpaRepository;
+import org.springframework.stereotype.Component;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+@Component
+public class ProductoRepositoryAdapter implements ProductoRepositoryPort {
+
+    private final ProductoJpaRepository productoJpaRepository;
+    private final ClienteJpaRepository clienteJpaRepository;
+    private final ProductoMapper productoMapper;
+
+    public ProductoRepositoryAdapter(ProductoJpaRepository productoJpaRepository,
+                                   ClienteJpaRepository clienteJpaRepository,
+<span class="nc" id="L26">                                   ProductoMapper productoMapper) {</span>
+<span class="nc" id="L27">        this.productoJpaRepository = productoJpaRepository;</span>
+<span class="nc" id="L28">        this.clienteJpaRepository = clienteJpaRepository;</span>
+<span class="nc" id="L29">        this.productoMapper = productoMapper;</span>
+<span class="nc" id="L30">    }</span>
+
+    @Override
+    public Producto save(Producto producto) {
+<span class="nc" id="L34">        ProductoEntity entity = productoMapper.toEntity(producto);</span>
+
+<span class="nc bnc" id="L36" title="All 2 branches missed.">        if (producto.getClienteId() != null) {</span>
+<span class="nc" id="L37">            ClienteEntity cliente = clienteJpaRepository.findById(producto.getClienteId())</span>
+<span class="nc" id="L38">                    .orElseThrow(() -&gt; new RuntimeException(&quot;Cliente no encontrado&quot;));</span>
+<span class="nc" id="L39">            entity.setCliente(cliente);</span>
+        }
+
+<span class="nc" id="L42">        ProductoEntity savedEntity = productoJpaRepository.save(entity);</span>
+<span class="nc" id="L43">        return productoMapper.toDomain(savedEntity);</span>
+    }
+
+    @Override
+    public Optional&lt;Producto&gt; findById(Long id) {
+<span class="nc" id="L48">        return productoJpaRepository.findById(id)</span>
+<span class="nc" id="L49">                .map(productoMapper::toDomain);</span>
+    }
+
+    @Override
+    public Optional&lt;Producto&gt; findByNumeroCuenta(String numeroCuenta) {
+<span class="nc" id="L54">        return productoJpaRepository.findByNumeroCuenta(numeroCuenta)</span>
+<span class="nc" id="L55">                .map(productoMapper::toDomain);</span>
+    }
+
+    @Override
+    public List&lt;Producto&gt; findByClienteId(Long clienteId) {
+<span class="nc" id="L60">        return productoJpaRepository.findByClienteId(clienteId)</span>
+<span class="nc" id="L61">                .stream()</span>
+<span class="nc" id="L62">                .map(productoMapper::toDomain)</span>
+<span class="nc" id="L63">                .collect(Collectors.toList());</span>
+    }
+
+    @Override
+    public List&lt;Producto&gt; findAll() {
+<span class="nc" id="L68">        return productoJpaRepository.findAll()</span>
+<span class="nc" id="L69">                .stream()</span>
+<span class="nc" id="L70">                .map(productoMapper::toDomain)</span>
+<span class="nc" id="L71">                .collect(Collectors.toList());</span>
+    }
+
+    @Override
+    public void deleteById(Long id) {
+<span class="nc" id="L76">        productoJpaRepository.deleteById(id);</span>
+<span class="nc" id="L77">    }</span>
+
+    @Override
+    public boolean existsByNumeroCuenta(String numeroCuenta) {
+<span class="nc" id="L81">        return productoJpaRepository.existsByNumeroCuenta(numeroCuenta);</span>
+    }
+
+    @Override
+    public int countByClienteId(Long clienteId) {
+<span class="nc" id="L86">        return productoJpaRepository.countByClienteId(clienteId);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

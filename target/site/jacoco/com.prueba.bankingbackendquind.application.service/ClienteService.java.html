@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ClienteService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">banking-Backend-Quind</a> &gt; <a href="index.source.html" class="el_package">com.prueba.bankingbackendquind.application.service</a> &gt; <span class="el_source">ClienteService.java</span></div><h1>ClienteService.java</h1><pre class="source lang-java linenums">package com.prueba.bankingbackendquind.application.service;
+
+
+import com.prueba.bankingbackendquind.domain.exception.BusinessException;
+import com.prueba.bankingbackendquind.domain.exception.ClienteNotFoundException;
+import com.prueba.bankingbackendquind.domain.model.Cliente;
+import com.prueba.bankingbackendquind.domain.port.in.ClienteUseCase;
+import com.prueba.bankingbackendquind.domain.port.out.ClienteRepositoryPort;
+import com.prueba.bankingbackendquind.domain.port.out.ProductoRepositoryPort;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.regex.Pattern;
+
+@Service
+@Transactional
+public class ClienteService implements ClienteUseCase {
+
+<span class="fc" id="L21">    private static final Pattern EMAIL_PATTERN = Pattern.compile(</span>
+            &quot;^[A-Za-z0-9+_.-]+@([A-Za-z0-9.-]+\\.[A-Za-z]{2,})$&quot;
+    );
+
+    private final ClienteRepositoryPort clienteRepository;
+    private final ProductoRepositoryPort productoRepository;
+
+    public ClienteService(ClienteRepositoryPort clienteRepository,
+<span class="fc" id="L29">                          ProductoRepositoryPort productoRepository) {</span>
+<span class="fc" id="L30">        this.clienteRepository = clienteRepository;</span>
+<span class="fc" id="L31">        this.productoRepository = productoRepository;</span>
+<span class="fc" id="L32">    }</span>
+
+    @Override
+    public Cliente crearCliente(Cliente cliente) {
+<span class="fc" id="L36">        validarCliente(cliente);</span>
+
+<span class="fc bfc" id="L38" title="All 2 branches covered.">        if (clienteRepository.existsByNumeroIdentificacion(cliente.getNumeroIdentificacion())) {</span>
+<span class="fc" id="L39">            throw new BusinessException(&quot;Ya existe un cliente con el número de identificación: &quot;</span>
+<span class="fc" id="L40">                    + cliente.getNumeroIdentificacion());</span>
+        }
+
+<span class="fc bfc" id="L43" title="All 2 branches covered.">        if (!cliente.esMayorDeEdad()) {</span>
+<span class="fc" id="L44">            throw new BusinessException(&quot;No se puede crear un cliente menor de edad&quot;);</span>
+        }
+
+<span class="fc" id="L47">        cliente.setFechaCreacion(LocalDateTime.now());</span>
+<span class="fc" id="L48">        cliente.setFechaModificacion(LocalDateTime.now());</span>
+
+<span class="fc" id="L50">        return clienteRepository.save(cliente);</span>
+    }
+
+    @Override
+    public Cliente actualizarCliente(Long id, Cliente clienteActualizado) {
+<span class="fc" id="L55">        Cliente clienteExistente = clienteRepository.findById(id)</span>
+<span class="pc" id="L56">                .orElseThrow(() -&gt; new ClienteNotFoundException(&quot;Cliente no encontrado con ID: &quot; + id));</span>
+
+<span class="fc" id="L58">        validarCliente(clienteActualizado);</span>
+
+<span class="fc bfc" id="L60" title="All 2 branches covered.">        if (!clienteExistente.getNumeroIdentificacion().equals(clienteActualizado.getNumeroIdentificacion()) &amp;&amp;</span>
+<span class="fc bfc" id="L61" title="All 2 branches covered.">                clienteRepository.existsByNumeroIdentificacion(clienteActualizado.getNumeroIdentificacion())) {</span>
+<span class="fc" id="L62">            throw new BusinessException(&quot;Ya existe un cliente con el número de identificación: &quot;</span>
+<span class="fc" id="L63">                    + clienteActualizado.getNumeroIdentificacion());</span>
+        }
+
+<span class="fc" id="L66">        clienteExistente.setTipoIdentificacion(clienteActualizado.getTipoIdentificacion());</span>
+<span class="fc" id="L67">        clienteExistente.setNumeroIdentificacion(clienteActualizado.getNumeroIdentificacion());</span>
+<span class="fc" id="L68">        clienteExistente.setNombres(clienteActualizado.getNombres());</span>
+<span class="fc" id="L69">        clienteExistente.setApellido(clienteActualizado.getApellido());</span>
+<span class="fc" id="L70">        clienteExistente.setCorreoElectronico(clienteActualizado.getCorreoElectronico());</span>
+<span class="fc" id="L71">        clienteExistente.setFechaNacimiento(clienteActualizado.getFechaNacimiento());</span>
+<span class="fc" id="L72">        clienteExistente.actualizarFechaModificacion();</span>
+
+<span class="fc" id="L74">        return clienteRepository.save(clienteExistente);</span>
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Cliente obtenerClientePorId(Long id) {
+<span class="fc" id="L80">        return clienteRepository.findById(id)</span>
+<span class="fc" id="L81">                .orElseThrow(() -&gt; new ClienteNotFoundException(&quot;Cliente no encontrado con ID: &quot; + id));</span>
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Cliente obtenerClientePorNumeroIdentificacion(String numeroIdentificacion) {
+<span class="fc" id="L87">        return clienteRepository.findByNumeroIdentificacion(numeroIdentificacion)</span>
+<span class="fc" id="L88">                .orElseThrow(() -&gt; new ClienteNotFoundException(&quot;Cliente no encontrado con número de identificación: &quot;</span>
+                        + numeroIdentificacion));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List&lt;Cliente&gt; obtenerTodosLosClientes() {
+<span class="fc" id="L95">        return clienteRepository.findAll();</span>
+    }
+
+    @Override
+    public void eliminarCliente(Long id) {
+<span class="fc" id="L100">        Cliente cliente = clienteRepository.findById(id)</span>
+<span class="pc" id="L101">                .orElseThrow(() -&gt; new ClienteNotFoundException(&quot;Cliente no encontrado con ID: &quot; + id));</span>
+
+<span class="fc" id="L103">        int cantidadProductos = productoRepository.countByClienteId(id);</span>
+<span class="fc bfc" id="L104" title="All 2 branches covered.">        if (cantidadProductos &gt; 0) {</span>
+<span class="fc" id="L105">            throw new BusinessException(&quot;No se puede eliminar el cliente porque tiene productos vinculados&quot;);</span>
+        }
+
+<span class="fc" id="L108">        clienteRepository.deleteById(id);</span>
+<span class="fc" id="L109">    }</span>
+
+    private void validarCliente(Cliente cliente) {
+<span class="pc bpc" id="L112" title="1 of 4 branches missed.">        if (cliente.getNombres() == null || cliente.getNombres().trim().length() &lt; 2) {</span>
+<span class="fc" id="L113">            throw new BusinessException(&quot;El nombre debe tener al menos 2 caracteres&quot;);</span>
+        }
+
+<span class="fc bfc" id="L116" title="All 4 branches covered.">        if (cliente.getApellido() == null || cliente.getApellido().trim().length() &lt; 2) {</span>
+<span class="fc" id="L117">            throw new BusinessException(&quot;El apellido debe tener al menos 2 caracteres&quot;);</span>
+        }
+
+<span class="pc bpc" id="L120" title="1 of 2 branches missed.">        if (cliente.getCorreoElectronico() != null &amp;&amp;</span>
+<span class="fc bfc" id="L121" title="All 2 branches covered.">                !EMAIL_PATTERN.matcher(cliente.getCorreoElectronico()).matches()) {</span>
+<span class="fc" id="L122">            throw new BusinessException(&quot;El formato del correo electrónico no es válido&quot;);</span>
+        }
+
+<span class="fc bfc" id="L125" title="All 4 branches covered.">        if (cliente.getNumeroIdentificacion() == null || cliente.getNumeroIdentificacion().trim().isEmpty()) {</span>
+<span class="fc" id="L126">            throw new BusinessException(&quot;El número de identificación es obligatorio&quot;);</span>
+        }
+
+<span class="fc bfc" id="L129" title="All 2 branches covered.">        if (cliente.getTipoIdentificacion() == null) {</span>
+<span class="fc" id="L130">            throw new BusinessException(&quot;El tipo de identificación es obligatorio&quot;);</span>
+        }
+
+<span class="fc bfc" id="L133" title="All 2 branches covered.">        if (cliente.getFechaNacimiento() == null) {</span>
+<span class="fc" id="L134">            throw new BusinessException(&quot;La fecha de nacimiento es obligatoria&quot;);</span>
+        }
+<span class="fc" id="L136">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ProductoRequestDto.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">banking-Backend-Quind</a> &gt; <a href="index.source.html" class="el_package">com.prueba.bankingbackendquind.infrastructure.adapter.in.web.dto</a> &gt; <span class="el_source">ProductoRequestDto.java</span></div><h1>ProductoRequestDto.java</h1><pre class="source lang-java linenums">package com.prueba.bankingbackendquind.infrastructure.adapter.in.web.dto;
+
+import com.prueba.bankingbackendquind.domain.model.enums.TipoCuenta;
+import jakarta.validation.constraints.NotNull;
+
+public class ProductoRequestDto {
+
+    @NotNull(message = &quot;El tipo de cuenta es obligatorio&quot;)
+    private TipoCuenta tipoCuenta;
+
+    @NotNull(message = &quot;El ID del cliente es obligatorio&quot;)
+    private Long clienteId;
+
+<span class="fc" id="L14">    private boolean exentaGMF = false;</span>
+
+<span class="fc" id="L16">    public ProductoRequestDto() {}</span>
+
+    public TipoCuenta getTipoCuenta() {
+<span class="fc" id="L19">        return tipoCuenta;</span>
+    }
+
+    public void setTipoCuenta(TipoCuenta tipoCuenta) {
+<span class="fc" id="L23">        this.tipoCuenta = tipoCuenta;</span>
+<span class="fc" id="L24">    }</span>
+
+    public Long getClienteId() {
+<span class="fc" id="L27">        return clienteId;</span>
+    }
+
+    public void setClienteId(Long clienteId) {
+<span class="fc" id="L31">        this.clienteId = clienteId;</span>
+<span class="fc" id="L32">    }</span>
+
+    public boolean isExentaGMF() {
+<span class="fc" id="L35">        return exentaGMF;</span>
+    }
+
+    public void setExentaGMF(boolean exentaGMF) {
+<span class="fc" id="L39">        this.exentaGMF = exentaGMF;</span>
+<span class="fc" id="L40">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

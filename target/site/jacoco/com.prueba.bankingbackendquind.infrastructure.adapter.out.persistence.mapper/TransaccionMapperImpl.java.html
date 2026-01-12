@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>TransaccionMapperImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">banking-Backend-Quind</a> &gt; <a href="index.source.html" class="el_package">com.prueba.bankingbackendquind.infrastructure.adapter.out.persistence.mapper</a> &gt; <span class="el_source">TransaccionMapperImpl.java</span></div><h1>TransaccionMapperImpl.java</h1><pre class="source lang-java linenums">package com.prueba.bankingbackendquind.infrastructure.adapter.out.persistence.mapper;
+
+import com.prueba.bankingbackendquind.domain.model.Transaccion;
+import com.prueba.bankingbackendquind.infrastructure.adapter.out.persistence.entity.ProductoEntity;
+import com.prueba.bankingbackendquind.infrastructure.adapter.out.persistence.entity.TransaccionEntity;
+import javax.annotation.processing.Generated;
+import org.springframework.stereotype.Component;
+
+@Generated(
+    value = &quot;org.mapstruct.ap.MappingProcessor&quot;,
+    date = &quot;2026-01-11T22:53:03-0500&quot;,
+    comments = &quot;version: 1.5.5.Final, compiler: javac, environment: Java 17.0.17 (Microsoft)&quot;
+)
+@Component
+<span class="nc" id="L15">public class TransaccionMapperImpl implements TransaccionMapper {</span>
+
+    @Override
+    public Transaccion toDomain(TransaccionEntity entity) {
+<span class="nc bnc" id="L19" title="All 2 branches missed.">        if ( entity == null ) {</span>
+<span class="nc" id="L20">            return null;</span>
+        }
+
+<span class="nc" id="L23">        Transaccion transaccion = new Transaccion();</span>
+
+<span class="nc" id="L25">        transaccion.setCuentaOrigenId( entityCuentaOrigenId( entity ) );</span>
+<span class="nc" id="L26">        transaccion.setCuentaDestinoId( entityCuentaDestinoId( entity ) );</span>
+<span class="nc" id="L27">        transaccion.setId( entity.getId() );</span>
+<span class="nc" id="L28">        transaccion.setTipoTransaccion( entity.getTipoTransaccion() );</span>
+<span class="nc" id="L29">        transaccion.setMonto( entity.getMonto() );</span>
+<span class="nc" id="L30">        transaccion.setDescripcion( entity.getDescripcion() );</span>
+<span class="nc" id="L31">        transaccion.setFechaCreacion( entity.getFechaCreacion() );</span>
+<span class="nc" id="L32">        transaccion.setNumeroCuentaOrigen( entity.getNumeroCuentaOrigen() );</span>
+<span class="nc" id="L33">        transaccion.setNumeroCuentaDestino( entity.getNumeroCuentaDestino() );</span>
+
+<span class="nc" id="L35">        return transaccion;</span>
+    }
+
+    @Override
+    public TransaccionEntity toEntity(Transaccion domain) {
+<span class="nc bnc" id="L40" title="All 2 branches missed.">        if ( domain == null ) {</span>
+<span class="nc" id="L41">            return null;</span>
+        }
+
+<span class="nc" id="L44">        TransaccionEntity transaccionEntity = new TransaccionEntity();</span>
+
+<span class="nc" id="L46">        transaccionEntity.setId( domain.getId() );</span>
+<span class="nc" id="L47">        transaccionEntity.setTipoTransaccion( domain.getTipoTransaccion() );</span>
+<span class="nc" id="L48">        transaccionEntity.setMonto( domain.getMonto() );</span>
+<span class="nc" id="L49">        transaccionEntity.setDescripcion( domain.getDescripcion() );</span>
+<span class="nc" id="L50">        transaccionEntity.setFechaCreacion( domain.getFechaCreacion() );</span>
+<span class="nc" id="L51">        transaccionEntity.setNumeroCuentaOrigen( domain.getNumeroCuentaOrigen() );</span>
+<span class="nc" id="L52">        transaccionEntity.setNumeroCuentaDestino( domain.getNumeroCuentaDestino() );</span>
+
+<span class="nc" id="L54">        return transaccionEntity;</span>
+    }
+
+    private Long entityCuentaOrigenId(TransaccionEntity transaccionEntity) {
+<span class="nc bnc" id="L58" title="All 2 branches missed.">        if ( transaccionEntity == null ) {</span>
+<span class="nc" id="L59">            return null;</span>
+        }
+<span class="nc" id="L61">        ProductoEntity cuentaOrigen = transaccionEntity.getCuentaOrigen();</span>
+<span class="nc bnc" id="L62" title="All 2 branches missed.">        if ( cuentaOrigen == null ) {</span>
+<span class="nc" id="L63">            return null;</span>
+        }
+<span class="nc" id="L65">        Long id = cuentaOrigen.getId();</span>
+<span class="nc bnc" id="L66" title="All 2 branches missed.">        if ( id == null ) {</span>
+<span class="nc" id="L67">            return null;</span>
+        }
+<span class="nc" id="L69">        return id;</span>
+    }
+
+    private Long entityCuentaDestinoId(TransaccionEntity transaccionEntity) {
+<span class="nc bnc" id="L73" title="All 2 branches missed.">        if ( transaccionEntity == null ) {</span>
+<span class="nc" id="L74">            return null;</span>
+        }
+<span class="nc" id="L76">        ProductoEntity cuentaDestino = transaccionEntity.getCuentaDestino();</span>
+<span class="nc bnc" id="L77" title="All 2 branches missed.">        if ( cuentaDestino == null ) {</span>
+<span class="nc" id="L78">            return null;</span>
+        }
+<span class="nc" id="L80">        Long id = cuentaDestino.getId();</span>
+<span class="nc bnc" id="L81" title="All 2 branches missed.">        if ( id == null ) {</span>
+<span class="nc" id="L82">            return null;</span>
+        }
+<span class="nc" id="L84">        return id;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>
